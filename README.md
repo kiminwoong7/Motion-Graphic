@@ -13,3 +13,14 @@
 python -m http.server 8765 --directory canon_ad
 ```
 http://localhost:8765 → ▶ PLAY (R = 다시 재생, `?t=12` = 특정 시점 정지 프레임)
+
+## WANDER — Enjoy Your Life (`travel/`)
+38초 세계여행 청춘 모션그래픽 (16:9, HTML/Canvas/Web Audio).
+
+- 한 명의 배낭여행자가 도시 → 순례길·히말라야·항해·서핑·열기구·오로라·뉴욕 루프탑 파티 → 마추픽추로 이어지는 여정
+- 장소가 바뀔 때마다 비트에 맞춰 커졌다 작아지는 대형 타이틀, 한국어 여행 일기 자막
+- 음악: 오케스트라 트레일러 → 120 BPM 페스티벌 그루브(뉴욕 드롭) → 피아노 브레스 → A장조 클라이맥스, Web Audio 실시간 합성
+- 엔딩: ENJOY YOUR LIFE · 인생은 한 번, 지금 떠나라
+
+### 사진 출처 (Wikimedia Commons / Wikipedia, 각 파일의 CC 라이선스를 따름)
+Matterhorn from Domhütte · Shibuya Crossing, Aerial · New York Times Square (terabass) · Burj Khalifa and the Dubai skyline · Al Deir Petra · Ha Long Bay in 2019 · Camino Francés, Penas, Melide · Camino de Santiago (2671926522) · Mt. Everest from Gokyo Ri · Sailing (257088109) · Mavericks Surf Contest 2010b · Cappadocia balloon trip, Ortahisar Castle · Aurora borealis over Eielson AFB · City of lights (Unsplash) · Moraine Lake 17092005 · Canyon River Tree (165872763) · Machu Picchu, 2023 (012)
