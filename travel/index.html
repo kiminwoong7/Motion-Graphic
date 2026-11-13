@@ -74,7 +74,7 @@ const easeIO=t=>{t=cl(t);return t<.5?8*t*t*t*t:1-Math.pow(-2*t+2,4)/2};
 const back=t=>{t=cl(t);const c=1.7;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2)};
 const lerp=(a,b,k)=>a+(b-a)*k;
 const BEAT=0.5; // 120 BPM
-const END=33.2, TOTAL=38.5;
+const END=33.2, TOTAL=41.6;
 // beat pulse 0..1 (spikes on every beat after the drop)
 const pulse=t=>t<3.6?0:Math.exp(-(((t-3.6)%BEAT))/0.11);
 
@@ -322,9 +322,13 @@ const gr=$('grain'),gg=gr.getContext('2d');const tile=document.createElement('ca
 function drawGrain(){for(let i=0;i<id.data.length;i+=4){const v=Math.random()*255;id.data[i]=id.data[i+1]=id.data[i+2]=v;id.data[i+3]=15;}tg.putImageData(id,0,0);gg.clearRect(0,0,1920,1080);gg.fillStyle=gg.createPattern(tile,'repeat');gg.fillRect(0,0,1920,1080);}
 
 // ---------- AUDIO: spectacular hybrid (orchestral trailer × festival anthem), 120 BPM ----------
-let AC,master;
+let AC,master,COMP;
+// recorded score: Kevin MacLeod – "Heroic Age" (incompetech.com, CC BY 4.0)
+let MUS=null;const musReady=fetch('audio/Heroic_Age.mp3').then(r=>r.arrayBuffer()).then(b=>new OfflineAudioContext(2,44100,44100).decodeAudioData(b)).then(a=>{MUS=a;}).catch(e=>console.warn('music',e));
+const WARP=0.923, MUS_OFF=49.96; // track 53.56s (the drop) lands on 3.6s; 130 BPM grid
+const rt=d=>d<3.6?d:3.6+(d-3.6)*WARP;
 function audioInit(){AC=new (window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=.6;
- const comp=AC.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=4;comp.attack.value=.008;comp.release.value=.22;
+ const comp=AC.createDynamicsCompressor();COMP=comp;comp.threshold.value=-18;comp.ratio.value=4;comp.attack.value=.008;comp.release.value=.22;
  const rev=AC.createConvolver();const len=AC.sampleRate*3,ir=AC.createBuffer(2,len,AC.sampleRate);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.3)}rev.buffer=ir;
  const wet=AC.createGain();wet.gain.value=.36;master.connect(comp);master.connect(rev);rev.connect(wet);wet.connect(comp);comp.connect(AC.destination);}
 const hz=m=>440*Math.pow(2,(m-69)/12);
@@ -357,6 +361,22 @@ function groove(T0,from,to,opt={}){ // festival groove, 1 bar = 2s
 }
 function subdrop(t0,v=.8){const o=AC.createOscillator(),gn=AC.createGain();o.frequency.setValueAtTime(70,t0);o.frequency.exponentialRampToValueAtTime(28,t0+1.2);gn.gain.setValueAtTime(v,t0);gn.gain.exponentialRampToValueAtTime(.001,t0+1.4);o.connect(gn);gn.connect(master);o.start(t0);o.stop(t0+1.5);}
 const revcym=(t0,d=.6)=>{sweep(t0-d,d,2500,11000,.22);};
+function scoreReal(T0){
+ const at=d=>T0+rt(d);
+ if(MUS){const src=AC.createBufferSource();src.buffer=MUS;const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=20000;const gn=AC.createGain();src.connect(lp);lp.connect(gn);gn.connect(COMP);
+  gn.gain.setValueAtTime(0,T0);gn.gain.linearRampToValueAtTime(1.15,T0+.25);
+  gn.gain.setValueAtTime(1.15,at(32.35));gn.gain.linearRampToValueAtTime(.1,at(32.5));lp.frequency.setValueAtTime(20000,at(32.35));lp.frequency.exponentialRampToValueAtTime(300,at(32.5));
+  gn.gain.setValueAtTime(.1,at(33.15));gn.gain.linearRampToValueAtTime(1.2,at(33.25));lp.frequency.setValueAtTime(300,at(33.15));lp.frequency.exponentialRampToValueAtTime(20000,at(33.3));
+  src.start(T0,MUS_OFF);}
+ taiko(T0,1,80);noise(T0,.5,.45,3000,'highpass');[.12,.24,.36].forEach(x=>taiko(T0+x,.5,140));
+ riser(at(2.4),rt(3.6)-rt(2.4),.18);subdrop(at(3.6),1);taiko(at(3.6),1.2,70);
+ [6.75,7.75,8.5,9.25,9.75,12.75,15.25,17.25,19.25,21.25,26.25,28.05].forEach(c=>sweep(at(c),.3,300,4200,.26));
+ [7,10.5,13,15.5,17.5,19.5,21.5,23.5,26.5,28.3,30.5].forEach(x=>{subdrop(at(x),.6);revcym(at(x),.45);taiko(at(x),.7,90);});
+ noise(at(9.5),.2,.3,5000,'highpass');
+ noise(at(23.5),1.6,.2,2500,'bandpass',.5);[23.6,24.1,24.6,25.1,25.6,26.0].forEach(x=>{noise(at(x),.05,.35,3000,'highpass');noise(at(x)+.02,.8,.1,700);});
+ [29.6,29.8,30,30.1,30.2,30.28,30.36,30.43].forEach(x=>noise(at(x),.06,.25,6000,'highpass'));
+ sweep(at(32.5),rt(33.2)-rt(32.5),400,9000,.18);subdrop(at(33.2),1);taiko(at(33.2),1.3,70);taiko(at(33.65),.9,90);
+}
 function score(T0){
  // cold open
  braam(T0,33,1.6,.06);noise(T0,.5,.5,3000,'highpass');[.12,.24,.36].forEach(x=>taiko(T0+x,.6,140));
@@ -415,8 +435,8 @@ function score(T0){
 // ---------- RUN ----------
 let t0=null,raf,lastG=0;
 function render(t){drawShots(t);drawTag(t);drawStats(t);drawSub(t);drawCues(t);drawFX(t);drawFlash(t);}
-function frame(now){const t=(now-t0)/1000;render(t);if(now-lastG>40){drawGrain();lastG=now;}if(t<TOTAL+1)raf=requestAnimationFrame(frame);}
-function play(){$('start').style.display='none';if(AC){try{master.disconnect()}catch(e){}AC.close();}audioInit();cancelAnimationFrame(raf);t0=performance.now()+30;score(AC.currentTime+.03);raf=requestAnimationFrame(frame);}
+function frame(now){const real=(now-t0)/1000;const t=real<3.6?real:3.6+(real-3.6)/WARP;render(t);if(now-lastG>40){drawGrain();lastG=now;}if(t<TOTAL+1)raf=requestAnimationFrame(frame);}
+async function play(){$('start').querySelector('span').textContent='LOADING…';await musReady;$('start').style.display='none';if(AC){try{master.disconnect()}catch(e){}AC.close();}audioInit();cancelAnimationFrame(raf);t0=performance.now()+50;scoreReal(AC.currentTime+.05);raf=requestAnimationFrame(frame);}
 $('start').onclick=play;addEventListener('keydown',e=>{if(e.key==='r'||e.key==='R')play();});
 drawGrain();
 if(document.fonts)document.fonts.ready.then(()=>SH.forEach(s=>{s.w=0;}));

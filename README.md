@@ -19,7 +19,7 @@ http://localhost:8765 → ▶ PLAY (R = 다시 재생, `?t=12` = 특정 시점 �
 
 - 한 명의 배낭여행자가 도시 → 순례길·히말라야·항해·서핑·열기구·오로라·뉴욕 루프탑 파티 → 마추픽추로 이어지는 여정
 - 장소가 바뀔 때마다 비트에 맞춰 커졌다 작아지는 대형 타이틀, 한국어 여행 일기 자막
-- 음악: 오케스트라 트레일러 → 120 BPM 페스티벌 그루브(뉴욕 드롭) → 피아노 브레스 → A장조 클라이맥스, Web Audio 실시간 합성
+- 음악: Kevin MacLeod "Heroic Age" (incompetech.com, CC BY 4.0) — 130 BPM 박자에 컷·타이틀 펄스 동기화, 효과음(서브드롭·리버스 심벌·휘시·불꽃)은 Web Audio 합성
 - 엔딩: ENJOY YOUR LIFE · 인생은 한 번, 지금 떠나라
 
 ### 사진 출처 (Wikimedia Commons / Wikipedia, 각 파일의 CC 라이선스를 따름)
