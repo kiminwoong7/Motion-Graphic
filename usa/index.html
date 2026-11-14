@@ -26,6 +26,7 @@ canvas{position:absolute;inset:0;pointer-events:none}
 #lab .idx{font:300 26px/1 Inter,sans-serif;color:#fff;letter-spacing:.3em;margin-bottom:14px}
 #lab .rule{height:1.5px;background:#fff;width:0;margin:0 0 18px}
 #lab .n{font:400 92px/1.02 "Playfair Display",serif;letter-spacing:.005em}
+#lab .k{font:700 34px 'Noto Sans KR',sans-serif;margin-top:14px;letter-spacing:.04em}
 #lab .s{font:300 22px Inter,sans-serif;letter-spacing:.55em;text-transform:uppercase;margin-top:16px;opacity:.85}
 #chap{position:absolute;right:150px;top:180px;color:#fff;text-align:right;opacity:0;text-shadow:0 2px 20px rgba(0,0,0,.75)}
 #chap .k{font:300 20px Inter;letter-spacing:.6em;opacity:.85}
@@ -63,7 +64,7 @@ canvas{position:absolute;inset:0;pointer-events:none}
   <canvas id="fx" width="1920" height="1080"></canvas>
   <div id="scrimB"></div><div id="scrimC"></div>
   <div id="chap"><div class="k"></div><div class="v"></div></div>
-  <div id="lab"><div class="idx"></div><div class="rule"></div><div class="n"></div><div class="s"></div></div>
+  <div id="lab"><div class="idx"></div><div class="rule"></div><div class="n"></div><div class="s"></div><div class="k"></div></div>
   <div id="route"><div class="ln"></div><div class="pr"></div><div class="dot"></div><div class="e">ATLANTIC</div><div class="wv">PACIFIC</div></div>
   <div id="t"></div>
   <div id="mlab" class="txt caps" style="top:500px;font-size:44px;opacity:0;text-shadow:0 4px 30px rgba(0,0,0,.7)"></div>
@@ -92,19 +93,23 @@ const pulse=t=>t<BAR(2)||t>HIT?0:Math.exp(-(((t-B0)%BEAT+BEAT)%BEAT)/0.09);
 const SH=[
  {img:'nyc2',a:0,b:BAR(2)+.4,fx:'fade',s0:1.16,s1:1.03,x0:60,x1:-30,intro:1},
  {img:'manhattan',a:BAR(2),b:BAR(4),fx:'zoom',s0:1.1,s1:1.02,lab:['01','New York City','New York'],chap:['I','The East'],cue:1},
- {img:'liberty',a:BAR(4),b:BAR(6),fx:'wipeL',s0:1.02,s1:1.1,pos:'center 22%',lab:['02','Statue of Liberty','Liberty Island · New York']},
- {img:'capitol',a:BAR(6),b:BAR(8),fx:'fade',s0:1.1,s1:1.02,lab:['03','Washington, D.C.','District of Columbia']},
- {img:'niagara',a:BAR(8),b:BAR(10),fx:'wipeL',s0:1.1,s1:1.02,lab:['04','Niagara Falls','New York'],cue:1},
- {img:'smoky',a:BAR(10),b:BAR(12),fx:'fade',s0:1.02,s1:1.1,x0:30,x1:-30,lab:['05','Great Smoky Mountains','Tennessee · North Carolina']},
- {img:'goldengate',a:BAR(13),b:BAR(15),fx:'fade',s0:1.12,s1:1.03,lab:['06','Golden Gate Bridge','San Francisco · California'],chap:['II','The West'],cue:1},
- {img:'bixby',a:BAR(15),b:BAR(16),fx:'wipeR',s0:1.08,s1:1.02,x0:-40,x1:40,lab:['07','Big Sur','Highway 1 · California']},
- {img:'santamonica',a:BAR(16),b:BAR(17),fx:'wipeR',s0:1.02,s1:1.08,lab:['08','Santa Monica','Los Angeles · California']},
- {img:'hollywood',a:BAR(17),b:BAR(18),fx:'wipeR',s0:1.08,s1:1.02,lab:['09','Hollywood','Los Angeles · California']},
- {img:'vegas',a:BAR(18),b:BAR(19),fx:'wipeR',s0:1.02,s1:1.08,lab:['10','Las Vegas','Nevada']},
- {img:'canyon',a:BAR(19),b:BAR(21),fx:'zoom',s0:1.12,s1:1.02,x0:40,x1:-40,lab:['11','Grand Canyon','Arizona'],cue:1},
- {img:'monument',a:BAR(21),b:BAR(23),fx:'wipeR',s0:1.02,s1:1.1,lab:['12','Monument Valley','Utah · Arizona']},
- {img:'halfdome',a:BAR(23),b:BAR(25),fx:'fade',s0:1.1,s1:1.02,pos:'center 40%',lab:['13','Yosemite','California'],cue:1},
- ...['timessq','brooklyn','centralpark','boston','miami','lincoln','goldengate','acadia'].map((im,i)=>({img:im,a:BAR(25)+i*BEAT/2,b:BAR(25)+(i+1)*BEAT/2,fx:'cut',s0:1.06,s1:1.1,mlab:['Times Square','Brooklyn','Central Park','Boston','Miami','Lincoln Memorial','San Francisco','Acadia'][i]})),
+ {img:'p_tsnight',a:BAR(4),b:BAR(5),fx:'wipeL',s0:1.02,s1:1.1,lab:['02','Times Square','Manhattan · New York','수많은 사람들 속, 뉴욕의 밤']},
+ {img:'p_pizza',a:BAR(5),b:BAR(6),fx:'zoom',s0:1.12,s1:1.04,lab:['03','A Slice of New York','Brooklyn · New York','뉴욕 피자 한 조각의 행복']},
+ {img:'liberty',a:BAR(6),b:BAR(7),fx:'wipeL',s0:1.02,s1:1.08,pos:'center 22%',lab:['04','Statue of Liberty','Liberty Island · New York']},
+ {img:'capitol',a:BAR(7),b:BAR(8),fx:'fade',s0:1.08,s1:1.02,lab:['05','Washington, D.C.','District of Columbia']},
+ {img:'niagara',a:BAR(8),b:BAR(10),fx:'wipeL',s0:1.1,s1:1.02,lab:['06','Niagara Falls','New York'],cue:1},
+ {img:'smoky',a:BAR(10),b:BAR(11),fx:'fade',s0:1.02,s1:1.08,x0:30,x1:-30,lab:['07','Great Smoky Mountains','Tennessee · North Carolina']},
+ {img:'p_nathans',a:BAR(11),b:BAR(12),fx:'wipeL',s0:1.08,s1:1.02,lab:['08','Coney Island','Brooklyn · New York','바닷바람과 핫도그 한 입']},
+ {img:'goldengate',a:BAR(13),b:BAR(15),fx:'fade',s0:1.12,s1:1.03,lab:['09','Golden Gate Bridge','San Francisco · California'],chap:['II','The West'],cue:1},
+ {img:'bixby',a:BAR(15),b:BAR(16),fx:'wipeR',s0:1.08,s1:1.02,x0:-40,x1:40,lab:['10','Big Sur','Highway 1 · California']},
+ {img:'p_smtower',a:BAR(16),b:BAR(17),fx:'wipeR',s0:1.02,s1:1.08,lab:['11','Santa Monica Beach','Los Angeles · California','햇살 아래 맨발로 걷는 해변']},
+ {img:'p_route66b',a:BAR(17),b:BAR(18),fx:'zoom',s0:1.12,s1:1.03,lab:['12','Route 66','Mother Road · Arizona','창문을 내리고, 끝없는 로드트립']},
+ {img:'vegas',a:BAR(18),b:BAR(19),fx:'wipeR',s0:1.02,s1:1.08,lab:['13','Las Vegas','Nevada','잠들지 않는 사막의 불빛']},
+ {img:'canyon',a:BAR(19),b:BAR(21),fx:'zoom',s0:1.12,s1:1.02,x0:40,x1:-40,lab:['14','Grand Canyon','Arizona'],cue:1},
+ {img:'p_hikers',a:BAR(21),b:BAR(22),fx:'wipeR',s0:1.02,s1:1.1,lab:['15','Slot Canyons','Page · Arizona','붉은 협곡 사이를 걷다']},
+ {img:'monument',a:BAR(22),b:BAR(23),fx:'fade',s0:1.08,s1:1.02,lab:['16','Monument Valley','Utah · Arizona']},
+ {img:'halfdome',a:BAR(23),b:BAR(25),fx:'fade',s0:1.1,s1:1.02,pos:'center 40%',lab:['17','Yosemite','California'],cue:1},
+ ...['p_tschill','p_dinernight','hollywood','p_thunderbolt','miami','p_tscrowd','centralpark','santamonica'].map((im,i)=>({img:im,a:BAR(25)+i*BEAT/2,b:BAR(25)+(i+1)*BEAT/2,fx:'cut',s0:1.06,s1:1.1,mlab:['Times Square','Diner Nights','Hollywood','Coney Island','Miami','New York','Central Park','Santa Monica'][i]})),
 ];
 const shots=$('shots');
 SH.forEach(s=>{const d=document.createElement('div');d.className='shot';d.style.backgroundImage=`url(img/${s.img}.jpg)`;if(s.pos)d.style.backgroundPosition=s.pos;shots.appendChild(d);s.el=d;});
@@ -142,12 +147,13 @@ let cur=null;
 function drawLabel(t){
  const s=SH.find(s=>s.lab&&t>=s.a&&t<s.b);const el=$('lab');
  if(!s){el.style.opacity=cl(1-(t-(cur?cur.b:0))/.25)*(cur&&t<cur.b+.25?1:0);if(!cur||t>cur.b+.25)el.style.opacity=0;return;}
- if(cur!==s){cur=s;el.querySelector('.idx').textContent=s.lab[0];el.querySelector('.n').textContent=s.lab[1];el.querySelector('.s').textContent=s.lab[2];}
+ if(cur!==s){cur=s;el.querySelector('.idx').textContent=s.lab[0];el.querySelector('.n').textContent=s.lab[1];el.querySelector('.s').textContent=s.lab[2];el.querySelector('.k').textContent=s.lab[3]||'';}
  const k=t-s.a-(s.cue?BAR(1)-B0+.2:.05),out=cl((s.b-t)/.25);
  el.style.opacity=out*cl(k/.2);
  const n=el.querySelector('.n');n.style.opacity=cl((k-.15)/.4);n.style.transform=`translateY(${(1-ease((k-.15)/.6))*30}px)`;n.style.filter=`blur(${(1-ease((k-.15)/.45))*8}px)`;
  el.querySelector('.idx').style.opacity=cl(k/.4)*.9;el.querySelector('.idx').style.transform=`translateY(${(1-ease(k/.6))*20}px)`;
  el.querySelector('.rule').style.width=(ease(k/.8)*240)+'px';
+ {const kk=el.querySelector('.k');kk.style.opacity=cl((k-.45)/.4);kk.style.transform=`translateY(${(1-ease((k-.45)/.6))*14}px)`;}
  const sv=el.querySelector('.s');sv.style.opacity=cl((k-.35)/.4)*.85;sv.style.letterSpacing=(.9-.35*ease((k-.35)/1))+'em';
  // chapter marker
  const c=$('chap');const ch=SH.filter(x=>x.chap&&t>=x.a).pop();
@@ -214,7 +220,7 @@ const R=i=>{const x=Math.sin(i*127.1)*43758.5453;return x-Math.floor(x)};
 function drawFX(t){
  g.clearRect(0,0,1920,1080);
  // soft golden leak drifting on nature / sunset shots
- const L=[[BAR(8),BAR(12)],[BAR(13),BAR(15)],[BAR(19),BAR(25)]];
+ const L=[[BAR(8),BAR(11)],[BAR(13),BAR(18)],[BAR(19),BAR(25)]];
  let lk=0;L.forEach(([a,b])=>lk=Math.max(lk,cl((t-a)/.8)*cl((b-t)/.6)));
  if(lk>0){g.save();g.globalCompositeOperation='lighter';const x=((t*180)%2600)-340;const gr=g.createRadialGradient(x,160,0,x,160,950);gr.addColorStop(0,`rgba(255,180,110,${.22*lk})`);gr.addColorStop(1,'rgba(255,120,40,0)');g.fillStyle=gr;g.fillRect(0,0,1920,1080);g.restore();}
  // dust motes in intro + end
@@ -236,7 +242,7 @@ function score(T0){
   const a=T0+BAR(12),b=T0+BAR(13);lp.frequency.setValueAtTime(20000,a-.05);lp.frequency.exponentialRampToValueAtTime(700,a+.5);gn.gain.setValueAtTime(1,a-.05);gn.gain.linearRampToValueAtTime(.55,a+.5);lp.frequency.setValueAtTime(700,b-1);lp.frequency.exponentialRampToValueAtTime(20000,b);gn.gain.setValueAtTime(.55,b-1);gn.gain.linearRampToValueAtTime(1.1,b);
   src.start(T0,MUS_OFF);}
  noise(T0+BAR(13)-1.6,1.6,.16,250,6000);noise(T0+BAR(25)-1.2,1.2,.14,300,7000);
- [2,4,6,8,10,15,16,17,18,19,21,23].forEach(n=>{boom(T0+BAR(n),.18);noise(T0+BAR(n)-.35,.35,.06,600,3000);});
+ [2,4,5,6,7,8,10,11,15,16,17,18,19,21,22,23].forEach(n=>{boom(T0+BAR(n),.18);noise(T0+BAR(n)-.35,.35,.06,600,3000);});
  noise(T0+BAR(12)-.5,.5,.12,300,3500);boom(T0+BAR(2),.35);boom(T0+BAR(13),.5);boom(T0+HIT,.6);
 }
 
