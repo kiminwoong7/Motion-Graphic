@@ -21,12 +21,13 @@ canvas{position:absolute;inset:0;pointer-events:none}
 #scrimB{position:absolute;left:0;right:0;bottom:0;height:600px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.72));pointer-events:none}
 #scrimC{position:absolute;inset:0;background:radial-gradient(ellipse 50% 38% at 50% 50%,rgba(0,0,0,.62),rgba(0,0,0,0));opacity:0;pointer-events:none}
 /* lower-third place label */
-#lab{position:absolute;left:150px;bottom:200px;color:#fff;opacity:0;text-shadow:0 2px 26px rgba(0,0,0,.7)}
-#lab .idx{font:200 92px/1 Inter,sans-serif;color:transparent;-webkit-text-stroke:1.2px rgba(255,255,255,.8);margin-bottom:10px;letter-spacing:.02em}
+#lab{position:absolute;z-index:1;isolation:isolate;left:150px;bottom:200px;color:#fff;opacity:0;text-shadow:0 2px 26px rgba(0,0,0,.7)}
+#lab:before{content:"";position:absolute;left:-220px;bottom:-140px;width:1100px;height:520px;background:radial-gradient(ellipse at 30% 62%,rgba(0,0,0,.55),rgba(0,0,0,0) 66%);z-index:-1}
+#lab .idx{font:300 26px/1 Inter,sans-serif;color:#fff;letter-spacing:.3em;margin-bottom:14px}
 #lab .rule{height:1.5px;background:#fff;width:0;margin:0 0 18px}
 #lab .n{font:400 92px/1.02 "Playfair Display",serif;letter-spacing:.005em}
 #lab .s{font:300 22px Inter,sans-serif;letter-spacing:.55em;text-transform:uppercase;margin-top:16px;opacity:.85}
-#chap{position:absolute;right:150px;top:180px;color:#fff;text-align:right;opacity:0}
+#chap{position:absolute;right:150px;top:180px;color:#fff;text-align:right;opacity:0;text-shadow:0 2px 20px rgba(0,0,0,.75)}
 #chap .k{font:300 20px Inter;letter-spacing:.6em;opacity:.85}
 #chap .v{font:italic 400 48px "Playfair Display",serif;margin-top:6px}
 /* coast-to-coast line (east on the right, travelling west) */
@@ -39,7 +40,7 @@ canvas{position:absolute;inset:0;pointer-events:none}
 #sub{position:absolute;left:0;right:0;top:640px;text-align:center;color:#fff;font:700 58px "Noto Sans KR",sans-serif;letter-spacing:.12em;text-shadow:0 2px 24px rgba(0,0,0,.85),0 1px 4px rgba(0,0,0,.6);opacity:0}
 #split{position:absolute;inset:0;opacity:0}
 #split .half{position:absolute;top:0;bottom:0;width:50%;background-size:cover;background-position:center}
-#split .L{left:0;background-image:url(img/nyc2.jpg)}#split .R{right:0;background-image:url(img/goldengate.jpg)}
+#split .L{left:0;background-image:url(img/manhattan.jpg)}#split .R{right:0;background-image:url(img/goldengate.jpg)}
 #split .div{position:absolute;left:50%;top:0;bottom:0;width:1.5px;background:#fff;transform:translateX(-50%)}
 #split .tl,#split .tr{position:absolute;top:470px;font:400 120px "Playfair Display",serif;color:#fff;letter-spacing:.2em;text-shadow:0 4px 40px rgba(0,0,0,.5)}
 #split .tl{right:calc(50% + 80px)}#split .tr{left:calc(50% + 80px)}
@@ -89,7 +90,7 @@ const pulse=t=>t<BAR(2)||t>HIT?0:Math.exp(-(((t-B0)%BEAT+BEAT)%BEAT)/0.09);
 // ---------- SHOTS (bar-quantised) ----------
 // fx: fade | wipeL | wipeR | zoom | cut ; lab: [index, name, region]
 const SH=[
- {img:'brooklyn',a:0,b:BAR(2)+.4,fx:'fade',s0:1.12,s1:1.04,x0:80,x1:-40,intro:1},
+ {img:'nyc2',a:0,b:BAR(2)+.4,fx:'fade',s0:1.16,s1:1.03,x0:60,x1:-30,intro:1},
  {img:'manhattan',a:BAR(2),b:BAR(4),fx:'zoom',s0:1.1,s1:1.02,lab:['01','New York City','New York'],chap:['I','The East'],cue:1},
  {img:'liberty',a:BAR(4),b:BAR(6),fx:'wipeL',s0:1.02,s1:1.1,pos:'center 22%',lab:['02','Statue of Liberty','Liberty Island · New York']},
  {img:'capitol',a:BAR(6),b:BAR(8),fx:'fade',s0:1.1,s1:1.02,lab:['03','Washington, D.C.','District of Columbia']},
@@ -119,11 +120,11 @@ function drawShots(t){
   // keep outgoing shot under the next one until it has fully covered
   if(t>=s.b){op=s.fx==='cut'?0:op*cl(1-(t-s.b)/.6);}
   if(s.fx==='cut'&&t>=s.b)op=0;
-  if(s.intro)op*=cl(t/1.2)*(t<BAR(2)?.85:1);
+  if(s.intro)op*=cl(t/.9);
   s.el.style.zIndex=Math.round(s.a*10);
   s.el.style.opacity=op;s.el.style.clipPath=clip;
   s.el.style.transform=`translateX(${x}px) scale(${sc+.006*pulse(t)})`;
-  s.el.style.filter=`blur(${blur+(s.intro&&t<BAR(2)?2.5:0)}px) saturate(1.08) contrast(1.05)`;
+  s.el.style.filter=`blur(${blur+0}px) saturate(1.08) contrast(1.05)`;
  });
  // split screen EAST | WEST (BAR 13 → 14)
  const sp=$('split'),a=BAR(12),b=BAR(13);
@@ -184,7 +185,8 @@ endEl.innerHTML=`<div id="eA" class="caps" style="font-size:20px;letter-spacing:
 <div id="eE" style="display:flex;justify-content:center;gap:90px;margin-top:46px;opacity:0">
  <div style="text-align:left"><div class="caps" style="font-size:20px;opacity:.8">East · 7 Days</div><div style="font:700 36px 'Noto Sans KR',sans-serif;margin-top:12px">뉴욕 → 워싱턴 D.C. → 나이아가라</div><div style="font:500 24px 'Noto Sans KR',sans-serif;opacity:.75;margin-top:10px">인천 → 뉴욕 직항 약 14시간 · 추천 9–10월</div></div>
  <div style="width:1px;background:rgba(255,255,255,.4)"></div>
- <div style="text-align:left"><div class="caps" style="font-size:20px;opacity:.8">West · 10 Days</div><div style="font:700 36px 'Noto Sans KR',sans-serif;margin-top:12px">샌프란시스코 → 빅서 → 라스베이거스 → 그랜드캐니언</div><div style="font:500 24px 'Noto Sans KR',sans-serif;opacity:.75;margin-top:10px">인천 → 샌프란시스코 직항 약 11시간 · 추천 4–6월</div></div></div>`;
+ <div style="text-align:left"><div class="caps" style="font-size:20px;opacity:.8">West · 10 Days</div><div style="font:700 36px 'Noto Sans KR',sans-serif;margin-top:12px">샌프란시스코 → 빅서 → 라스베이거스 → 그랜드캐니언</div><div style="font:500 24px 'Noto Sans KR',sans-serif;opacity:.75;margin-top:10px">인천 → 샌프란시스코 직항 약 11시간 · 추천 4–6월</div></div></div>
+<div id="eF" style="font:500 24px 'Noto Sans KR',sans-serif;margin-top:34px;opacity:0;letter-spacing:.06em">입국 전 ESTA(전자여행허가) 온라인 신청 필수 · 지금, 당신의 미국 여행을 계획하세요</div>`;
 T.appendChild(endEl);
 function drawCues(t){
  cues.forEach(c=>{const out=cl((c.b-t)/.4);
@@ -203,7 +205,7 @@ function drawCues(t){
  $('eB').style.letterSpacing=(.5-.32*ease(a/2.2))+'em';$('eB').style.filter=`blur(${(1-ease(a/.9))*14}px)`;$('eB').style.opacity=cl(a/.5);
  $('eR').style.width=(ease((a-.6)/1.2)*420)+'px';
  $('eC').style.opacity=cl((a-1.0)/.7);$('eC').style.transform=`translateY(${(1-ease((a-1)/.9))*24}px)`;
- $('eD').style.opacity=cl((a-1.6)/.7)*.9;$('eE').style.opacity=cl((a-2.6)/.8);$('eE').style.transform=`translateY(${(1-ease((a-3)/1))*20}px)`;endEl.style.top=(300-90*easeIO((a-2.2)/1.2))+'px';
+ $('eD').style.opacity=cl((a-1.6)/.7)*.9;$('eE').style.opacity=cl((a-2.6)/.8);$('eF').style.opacity=cl((a-4.2)/.8)*.85;$('eE').style.transform=`translateY(${(1-ease((a-3)/1))*20}px)`;endEl.style.top=(300-90*easeIO((a-2.2)/1.2))+'px';
 }
 
 // ---------- FX: light leaks, intro particles ----------
