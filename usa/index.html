@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>AMERICA — Coast to Coast</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,500&family=Inter:wght@200;300;500&family=Noto+Serif+KR:wght@300;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,500&family=Inter:wght@200;300;500&family=Noto+Serif+KR:wght@300;500&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
 <style>
 html,body{margin:0;height:100%;background:#000;overflow:hidden}
 #stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;background:#05070a;transform-origin:center;font-family:Inter,sans-serif}
@@ -36,7 +36,7 @@ canvas{position:absolute;inset:0;pointer-events:none}
 #route .dot{position:absolute;top:4px;width:11px;height:11px;border-radius:50%;background:#fff;box-shadow:0 0 14px rgba(255,255,255,.9);transform:translateX(50%)}
 #route .e,#route .wv{position:absolute;top:-22px;font:300 12px Inter;letter-spacing:.5em;color:rgba(255,255,255,.7)}
 #route .e{right:0}#route .wv{left:0}
-#sub{position:absolute;left:0;right:0;top:640px;text-align:center;color:#fff;font:500 46px "Noto Serif KR",serif;letter-spacing:.12em;text-shadow:0 2px 24px rgba(0,0,0,.85),0 1px 4px rgba(0,0,0,.6);opacity:0}
+#sub{position:absolute;left:0;right:0;top:640px;text-align:center;color:#fff;font:700 58px "Noto Sans KR",sans-serif;letter-spacing:.12em;text-shadow:0 2px 24px rgba(0,0,0,.85),0 1px 4px rgba(0,0,0,.6);opacity:0}
 #split{position:absolute;inset:0;opacity:0}
 #split .half{position:absolute;top:0;bottom:0;width:50%;background-size:cover;background-position:center}
 #split .L{left:0;background-image:url(img/nyc2.jpg)}#split .R{right:0;background-image:url(img/goldengate.jpg)}
@@ -83,7 +83,7 @@ const easeIO=t=>{t=cl(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2};
 const lerp=(a,b,k)=>a+(b-a)*k;
 // music grid: "Inspired" 120.27 BPM, video beats at 0.12 + n·0.4989
 const BEAT=0.4989,B0=0.12,B=n=>B0+n*BEAT,BAR=n=>B(4*n);
-const HIT=BAR(26), TOTAL=60.5; // 52.0s: final downbeat of the track → end card
+const HIT=BAR(26), TOTAL=64; // 52.0s: final downbeat of the track → end card
 const pulse=t=>t<BAR(2)||t>HIT?0:Math.exp(-(((t-B0)%BEAT+BEAT)%BEAT)/0.09);
 
 // ---------- SHOTS (bar-quantised) ----------
@@ -96,12 +96,14 @@ const SH=[
  {img:'niagara',a:BAR(8),b:BAR(10),fx:'wipeL',s0:1.1,s1:1.02,lab:['04','Niagara Falls','New York'],cue:1},
  {img:'smoky',a:BAR(10),b:BAR(12),fx:'fade',s0:1.02,s1:1.1,x0:30,x1:-30,lab:['05','Great Smoky Mountains','Tennessee · North Carolina']},
  {img:'goldengate',a:BAR(13),b:BAR(15),fx:'fade',s0:1.12,s1:1.03,lab:['06','Golden Gate Bridge','San Francisco · California'],chap:['II','The West'],cue:1},
- {img:'bixby',a:BAR(15),b:BAR(17),fx:'wipeR',s0:1.1,s1:1.02,x0:-40,x1:40,lab:['07','Big Sur','Highway 1 · California']},
- {img:'vegas',a:BAR(17),b:BAR(19),fx:'fade',s0:1.02,s1:1.1,lab:['08','Las Vegas','Nevada']},
- {img:'canyon',a:BAR(19),b:BAR(21),fx:'zoom',s0:1.12,s1:1.02,x0:40,x1:-40,lab:['09','Grand Canyon','Arizona'],cue:1},
- {img:'monument',a:BAR(21),b:BAR(23),fx:'wipeR',s0:1.02,s1:1.1,lab:['10','Monument Valley','Utah · Arizona']},
- {img:'halfdome',a:BAR(23),b:BAR(25),fx:'fade',s0:1.1,s1:1.02,pos:'center 40%',lab:['11','Yosemite','California'],cue:1},
- ...['timessq','brooklyn','centralpark','boston','miami','hollywood','santamonica','acadia'].map((im,i)=>({img:im,a:BAR(25)+i*BEAT/2,b:BAR(25)+(i+1)*BEAT/2,fx:'cut',s0:1.06,s1:1.1,mlab:['Times Square','Brooklyn','Central Park','Boston','Miami','Hollywood','Santa Monica','Acadia'][i]})),
+ {img:'bixby',a:BAR(15),b:BAR(16),fx:'wipeR',s0:1.08,s1:1.02,x0:-40,x1:40,lab:['07','Big Sur','Highway 1 · California']},
+ {img:'santamonica',a:BAR(16),b:BAR(17),fx:'wipeR',s0:1.02,s1:1.08,lab:['08','Santa Monica','Los Angeles · California']},
+ {img:'hollywood',a:BAR(17),b:BAR(18),fx:'wipeR',s0:1.08,s1:1.02,lab:['09','Hollywood','Los Angeles · California']},
+ {img:'vegas',a:BAR(18),b:BAR(19),fx:'wipeR',s0:1.02,s1:1.08,lab:['10','Las Vegas','Nevada']},
+ {img:'canyon',a:BAR(19),b:BAR(21),fx:'zoom',s0:1.12,s1:1.02,x0:40,x1:-40,lab:['11','Grand Canyon','Arizona'],cue:1},
+ {img:'monument',a:BAR(21),b:BAR(23),fx:'wipeR',s0:1.02,s1:1.1,lab:['12','Monument Valley','Utah · Arizona']},
+ {img:'halfdome',a:BAR(23),b:BAR(25),fx:'fade',s0:1.1,s1:1.02,pos:'center 40%',lab:['13','Yosemite','California'],cue:1},
+ ...['timessq','brooklyn','centralpark','boston','miami','lincoln','goldengate','acadia'].map((im,i)=>({img:im,a:BAR(25)+i*BEAT/2,b:BAR(25)+(i+1)*BEAT/2,fx:'cut',s0:1.06,s1:1.1,mlab:['Times Square','Brooklyn','Central Park','Boston','Miami','Lincoln Memorial','San Francisco','Acadia'][i]})),
 ];
 const shots=$('shots');
 SH.forEach(s=>{const d=document.createElement('div');d.className='shot';d.style.backgroundImage=`url(img/${s.img}.jpg)`;if(s.pos)d.style.backgroundPosition=s.pos;shots.appendChild(d);s.el=d;});
@@ -140,7 +142,7 @@ function drawLabel(t){
  const s=SH.find(s=>s.lab&&t>=s.a&&t<s.b);const el=$('lab');
  if(!s){el.style.opacity=cl(1-(t-(cur?cur.b:0))/.25)*(cur&&t<cur.b+.25?1:0);if(!cur||t>cur.b+.25)el.style.opacity=0;return;}
  if(cur!==s){cur=s;el.querySelector('.idx').textContent=s.lab[0];el.querySelector('.n').textContent=s.lab[1];el.querySelector('.s').textContent=s.lab[2];}
- const k=t-s.a-(s.cue?BAR(1)-B0+.2:.1),out=cl((s.b-t)/.25);
+ const k=t-s.a-(s.cue?BAR(1)-B0+.2:.05),out=cl((s.b-t)/.25);
  el.style.opacity=out*cl(k/.2);
  const n=el.querySelector('.n');n.style.opacity=cl((k-.15)/.4);n.style.transform=`translateY(${(1-ease((k-.15)/.6))*30}px)`;n.style.filter=`blur(${(1-ease((k-.15)/.45))*8}px)`;
  el.querySelector('.idx').style.opacity=cl(k/.4)*.9;el.querySelector('.idx').style.transform=`translateY(${(1-ease(k/.6))*20}px)`;
@@ -172,17 +174,17 @@ const cues=[
 const SUBS=[[.9,BAR(2)-.1,'바다에서 빛나는 바다까지'],[BAR(2)+.7,BAR(3)+.2,'잠들지 않는 도시'],[BAR(8)+.7,BAR(9)+.2,'자연이 더 크게 말하는 곳'],[BAR(13)+.8,BAR(14)+.2,'서쪽으로'],[BAR(19)+.7,BAR(20)+.2,'어떤 풍경은 당신을 바꾼다'],[BAR(23)+.7,BAR(24)+.2,'끝없이, 자유롭게']];
 const T=$('t');
 cues.forEach(c=>{const d=document.createElement('div');d.className='txt '+c.cls;d.style.top=c.y+'px';d.style.fontSize=c.size+'px';d.style.textShadow='0 4px 30px rgba(0,0,0,.8), 0 1px 3px rgba(0,0,0,.6)';
- c.ws=c.words.map(w=>{const m=document.createElement('span');m.style.cssText='display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .12em';const s=document.createElement('span');s.className='w';s.textContent=w;m.appendChild(s);d.appendChild(m);return s});T.appendChild(d);c.el=d;});
+ c.ws=c.words.map(w=>{const m=document.createElement('span');m.style.cssText='display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .12em .18em';const s=document.createElement('span');s.className='w';s.textContent=w;m.appendChild(s);d.appendChild(m);return s});T.appendChild(d);c.el=d;});
 const endEl=document.createElement('div');endEl.className='txt';endEl.style.top='300px';endEl.style.opacity=0;
 endEl.innerHTML=`<div id="eA" class="caps" style="font-size:20px;letter-spacing:.8em;opacity:.8">THE UNITED STATES OF</div>
 <div id="eB" class="serif" style="font-size:210px;line-height:1.05;letter-spacing:.18em;margin-left:.18em">AMERICA</div>
 <div id="eR" style="height:1.5px;background:#fff;width:0;margin:18px auto 26px"></div>
 <div id="eC" class="serif it" style="font-size:46px">Every road, a new story.</div>
-<div id="eD" style="font:300 30px 'Noto Serif KR',serif;letter-spacing:.2em;margin-top:22px;opacity:.9">끝없는 길 위에서, 당신의 이야기를 만나세요</div>
+<div id="eD" style="font:500 34px 'Noto Sans KR',sans-serif;letter-spacing:.12em;margin-top:22px;opacity:.9">끝없는 길 위에서, 당신의 이야기를 만나세요</div>
 <div id="eE" style="display:flex;justify-content:center;gap:90px;margin-top:46px;opacity:0">
- <div style="text-align:left"><div class="caps" style="font-size:16px;opacity:.75">East · 7 Days</div><div style="font:400 30px 'Noto Serif KR',serif;margin-top:10px">뉴욕 → 워싱턴 D.C. → 나이아가라</div><div style="font:300 19px Inter;opacity:.7;margin-top:8px;letter-spacing:.1em">ICN → JFK 직항 약 14시간</div></div>
+ <div style="text-align:left"><div class="caps" style="font-size:20px;opacity:.8">East · 7 Days</div><div style="font:700 36px 'Noto Sans KR',sans-serif;margin-top:12px">뉴욕 → 워싱턴 D.C. → 나이아가라</div><div style="font:500 24px 'Noto Sans KR',sans-serif;opacity:.75;margin-top:10px">인천 → 뉴욕 직항 약 14시간 · 추천 9–10월</div></div>
  <div style="width:1px;background:rgba(255,255,255,.4)"></div>
- <div style="text-align:left"><div class="caps" style="font-size:16px;opacity:.75">West · 10 Days</div><div style="font:400 30px 'Noto Serif KR',serif;margin-top:10px">샌프란시스코 → 빅서 → 라스베이거스 → 그랜드캐니언</div><div style="font:300 19px Inter;opacity:.7;margin-top:8px;letter-spacing:.1em">ICN → SFO 직항 약 11시간</div></div></div>`;
+ <div style="text-align:left"><div class="caps" style="font-size:20px;opacity:.8">West · 10 Days</div><div style="font:700 36px 'Noto Sans KR',sans-serif;margin-top:12px">샌프란시스코 → 빅서 → 라스베이거스 → 그랜드캐니언</div><div style="font:500 24px 'Noto Sans KR',sans-serif;opacity:.75;margin-top:10px">인천 → 샌프란시스코 직항 약 11시간 · 추천 4–6월</div></div></div>`;
 T.appendChild(endEl);
 function drawCues(t){
  cues.forEach(c=>{const out=cl((c.b-t)/.4);
@@ -193,7 +195,7 @@ function drawCues(t){
    s.style.opacity=cl(p*1.5)*out;s.style.transform=tr+` translateY(${(1-out)*-20}px)`;s.style.filter=out<1?`blur(${(1-out)*8}px)`:'none';});
  });
  const sub=SUBS.find(s=>t>=s[0]&&t<s[1]);const se=$('sub');
- if(sub){if(se.textContent!==sub[2])se.textContent=sub[2];se.style.opacity=cl((t-sub[0]-.4)/.5)*cl((sub[1]-t)/.4)*.95;se.style.top=(cues.find(c=>t>=c.a&&t<c.b)?.size>120?600:560)+'px';}else se.style.opacity=0;
+ if(sub){if(se.textContent!==sub[2])se.textContent=sub[2];se.style.opacity=cl((t-sub[0]-.4)/.5)*cl((sub[1]-t)/.4)*.95;se.style.top=(cues.find(c=>t>=c.a&&t<c.b)?.size>120?600:545)+'px';}else se.style.opacity=0;
  $('scrimC').style.opacity=Math.max(0,...cues.map(c=>cl((t-c.a)/.5)*cl((c.b-t)/.4)));
  // end card
  const a=t-HIT;endEl.style.opacity=cl(a/.3);
@@ -201,7 +203,7 @@ function drawCues(t){
  $('eB').style.letterSpacing=(.5-.32*ease(a/2.2))+'em';$('eB').style.filter=`blur(${(1-ease(a/.9))*14}px)`;$('eB').style.opacity=cl(a/.5);
  $('eR').style.width=(ease((a-.6)/1.2)*420)+'px';
  $('eC').style.opacity=cl((a-1.0)/.7);$('eC').style.transform=`translateY(${(1-ease((a-1)/.9))*24}px)`;
- $('eD').style.opacity=cl((a-1.6)/.7)*.9;$('eE').style.opacity=cl((a-3.0)/.8);$('eE').style.transform=`translateY(${(1-ease((a-3)/1))*20}px)`;endEl.style.top=(300-70*easeIO((a-2.6)/1.2))+'px';
+ $('eD').style.opacity=cl((a-1.6)/.7)*.9;$('eE').style.opacity=cl((a-2.6)/.8);$('eE').style.transform=`translateY(${(1-ease((a-3)/1))*20}px)`;endEl.style.top=(300-90*easeIO((a-2.2)/1.2))+'px';
 }
 
 // ---------- FX: light leaks, intro particles ----------
@@ -232,7 +234,7 @@ function score(T0){
   const a=T0+BAR(12),b=T0+BAR(13);lp.frequency.setValueAtTime(20000,a-.05);lp.frequency.exponentialRampToValueAtTime(700,a+.5);gn.gain.setValueAtTime(1,a-.05);gn.gain.linearRampToValueAtTime(.55,a+.5);lp.frequency.setValueAtTime(700,b-1);lp.frequency.exponentialRampToValueAtTime(20000,b);gn.gain.setValueAtTime(.55,b-1);gn.gain.linearRampToValueAtTime(1.1,b);
   src.start(T0,MUS_OFF);}
  noise(T0+BAR(13)-1.6,1.6,.16,250,6000);noise(T0+BAR(25)-1.2,1.2,.14,300,7000);
- [2,4,6,8,10,15,17,19,21,23].forEach(n=>{boom(T0+BAR(n),.18);noise(T0+BAR(n)-.35,.35,.06,600,3000);});
+ [2,4,6,8,10,15,16,17,18,19,21,23].forEach(n=>{boom(T0+BAR(n),.18);noise(T0+BAR(n)-.35,.35,.06,600,3000);});
  noise(T0+BAR(12)-.5,.5,.12,300,3500);boom(T0+BAR(2),.35);boom(T0+BAR(13),.5);boom(T0+HIT,.6);
 }
 
