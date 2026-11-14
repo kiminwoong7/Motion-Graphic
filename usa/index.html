@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>AMERICA — Coast to Coast</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,500&family=Inter:wght@200;300;500&family=Noto+Serif+KR:wght@300;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;background:#05070a;transform-origin:center;font-family:Inter,sans-serif}
+#shots{position:absolute;inset:0;z-index:0;isolation:isolate;overflow:hidden}
+.shot{position:absolute;inset:-50px;background-size:cover;background-position:center;opacity:0;will-change:transform,opacity,clip-path,filter}
+canvas{position:absolute;inset:0;pointer-events:none}
+.txt{position:absolute;left:0;right:0;text-align:center;color:#fff;white-space:nowrap;pointer-events:none}
+.w{display:inline-block;opacity:0;will-change:transform,opacity,filter}
+.serif{font-family:"Playfair Display",Georgia,serif}
+.it{font-style:italic}
+.caps{font-family:Inter,sans-serif;font-weight:300;letter-spacing:.55em;text-transform:uppercase}
+#grade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,40,70,.22),rgba(255,150,70,.10));mix-blend-mode:soft-light;pointer-events:none}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%);pointer-events:none}
+#scrimB{position:absolute;left:0;right:0;bottom:0;height:600px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.72));pointer-events:none}
+#scrimC{position:absolute;inset:0;background:radial-gradient(ellipse 50% 38% at 50% 50%,rgba(0,0,0,.62),rgba(0,0,0,0));opacity:0;pointer-events:none}
+/* lower-third place label */
+#lab{position:absolute;left:150px;bottom:200px;color:#fff;opacity:0;text-shadow:0 2px 26px rgba(0,0,0,.7)}
+#lab .idx{font:200 92px/1 Inter,sans-serif;color:transparent;-webkit-text-stroke:1.2px rgba(255,255,255,.8);margin-bottom:10px;letter-spacing:.02em}
+#lab .rule{height:1.5px;background:#fff;width:0;margin:0 0 18px}
+#lab .n{font:400 92px/1.02 "Playfair Display",serif;letter-spacing:.005em}
+#lab .s{font:300 22px Inter,sans-serif;letter-spacing:.55em;text-transform:uppercase;margin-top:16px;opacity:.85}
+#chap{position:absolute;right:150px;top:180px;color:#fff;text-align:right;opacity:0}
+#chap .k{font:300 20px Inter;letter-spacing:.6em;opacity:.85}
+#chap .v{font:italic 400 48px "Playfair Display",serif;margin-top:6px}
+/* coast-to-coast line (east on the right, travelling west) */
+#route{position:absolute;left:150px;right:150px;bottom:160px;height:20px;opacity:0}
+#route .ln{position:absolute;left:0;right:0;top:9px;height:1px;background:rgba(255,255,255,.35)}
+#route .pr{position:absolute;right:0;top:9px;height:1px;background:#fff;width:0}
+#route .dot{position:absolute;top:4px;width:11px;height:11px;border-radius:50%;background:#fff;box-shadow:0 0 14px rgba(255,255,255,.9);transform:translateX(50%)}
+#route .e,#route .wv{position:absolute;top:-22px;font:300 12px Inter;letter-spacing:.5em;color:rgba(255,255,255,.7)}
+#route .e{right:0}#route .wv{left:0}
+#sub{position:absolute;left:0;right:0;top:640px;text-align:center;color:#fff;font:500 46px "Noto Serif KR",serif;letter-spacing:.12em;text-shadow:0 2px 24px rgba(0,0,0,.85),0 1px 4px rgba(0,0,0,.6);opacity:0}
+#split{position:absolute;inset:0;opacity:0}
+#split .half{position:absolute;top:0;bottom:0;width:50%;background-size:cover;background-position:center}
+#split .L{left:0;background-image:url(img/nyc2.jpg)}#split .R{right:0;background-image:url(img/goldengate.jpg)}
+#split .div{position:absolute;left:50%;top:0;bottom:0;width:1.5px;background:#fff;transform:translateX(-50%)}
+#split .tl,#split .tr{position:absolute;top:470px;font:400 120px "Playfair Display",serif;color:#fff;letter-spacing:.2em;text-shadow:0 4px 40px rgba(0,0,0,.5)}
+#split .tl{right:calc(50% + 80px)}#split .tr{left:calc(50% + 80px)}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#bars:before,#bars:after{content:"";position:absolute;left:0;right:0;height:var(--bar,135px);background:#000;z-index:50}
+#bars:before{top:0}#bars:after{bottom:0}
+#start{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#05070a;color:#fff;cursor:pointer;z-index:99;gap:20px}
+#start b{font:400 72px "Playfair Display",serif;letter-spacing:.35em;margin-left:.35em}
+#start span{font:300 14px Inter;letter-spacing:.5em;opacity:.7}
+#ctl{position:fixed;right:16px;bottom:12px;color:#555;font:12px Inter;z-index:98}
+</style>
+</head>
+<body>
+<div id="start"><b>AMERICA</b><span>▶ PLAY · 60″ · SOUND ON</span></div>
+<div id="ctl">R = replay</div>
+<div id="stage">
+  <div id="shots"></div>
+  <div id="split"><div class="half L"></div><div class="half R"></div><div class="div"></div><div class="tl">EAST</div><div class="tr">WEST</div></div>
+  <div id="grade"></div>
+  <canvas id="fx" width="1920" height="1080"></canvas>
+  <div id="scrimB"></div><div id="scrimC"></div>
+  <div id="chap"><div class="k"></div><div class="v"></div></div>
+  <div id="lab"><div class="idx"></div><div class="rule"></div><div class="n"></div><div class="s"></div></div>
+  <div id="route"><div class="ln"></div><div class="pr"></div><div class="dot"></div><div class="e">ATLANTIC</div><div class="wv">PACIFIC</div></div>
+  <div id="t"></div>
+  <div id="mlab" class="txt caps" style="top:500px;font-size:44px;opacity:0;text-shadow:0 4px 30px rgba(0,0,0,.7)"></div>
+  <canvas id="grain" width="480" height="270" style="width:1920px;height:1080px;opacity:.035"></canvas>
+  <div id="sub"></div>
+  <div id="vig"></div>
+  <div id="flash"></div>
+  <div id="bars"></div>
+</div>
+<script>
+const stage=document.getElementById('stage');
+function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener('resize',fit);fit();
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=t=>1-Math.pow(1-cl(t),3);
+const easeIO=t=>{t=cl(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2};
+const lerp=(a,b,k)=>a+(b-a)*k;
+// music grid: "Inspired" 120.27 BPM, video beats at 0.12 + n·0.4989
+const BEAT=0.4989,B0=0.12,B=n=>B0+n*BEAT,BAR=n=>B(4*n);
+const HIT=BAR(26), TOTAL=60.5; // 52.0s: final downbeat of the track → end card
+const pulse=t=>t<BAR(2)||t>HIT?0:Math.exp(-(((t-B0)%BEAT+BEAT)%BEAT)/0.09);
+
+// ---------- SHOTS (bar-quantised) ----------
+// fx: fade | wipeL | wipeR | zoom | cut ; lab: [index, name, region]
+const SH=[
+ {img:'brooklyn',a:0,b:BAR(2)+.4,fx:'fade',s0:1.12,s1:1.04,x0:80,x1:-40,intro:1},
+ {img:'manhattan',a:BAR(2),b:BAR(4),fx:'zoom',s0:1.1,s1:1.02,lab:['01','New York City','New York'],chap:['I','The East'],cue:1},
+ {img:'liberty',a:BAR(4),b:BAR(6),fx:'wipeL',s0:1.02,s1:1.1,pos:'center 22%',lab:['02','Statue of Liberty','Liberty Island · New York']},
+ {img:'capitol',a:BAR(6),b:BAR(8),fx:'fade',s0:1.1,s1:1.02,lab:['03','Washington, D.C.','District of Columbia']},
+ {img:'niagara',a:BAR(8),b:BAR(10),fx:'wipeL',s0:1.1,s1:1.02,lab:['04','Niagara Falls','New York'],cue:1},
+ {img:'smoky',a:BAR(10),b:BAR(12),fx:'fade',s0:1.02,s1:1.1,x0:30,x1:-30,lab:['05','Great Smoky Mountains','Tennessee · North Carolina']},
+ {img:'goldengate',a:BAR(13),b:BAR(15),fx:'fade',s0:1.12,s1:1.03,lab:['06','Golden Gate Bridge','San Francisco · California'],chap:['II','The West'],cue:1},
+ {img:'bixby',a:BAR(15),b:BAR(17),fx:'wipeR',s0:1.1,s1:1.02,x0:-40,x1:40,lab:['07','Big Sur','Highway 1 · California']},
+ {img:'vegas',a:BAR(17),b:BAR(19),fx:'fade',s0:1.02,s1:1.1,lab:['08','Las Vegas','Nevada']},
+ {img:'canyon',a:BAR(19),b:BAR(21),fx:'zoom',s0:1.12,s1:1.02,x0:40,x1:-40,lab:['09','Grand Canyon','Arizona'],cue:1},
+ {img:'monument',a:BAR(21),b:BAR(23),fx:'wipeR',s0:1.02,s1:1.1,lab:['10','Monument Valley','Utah · Arizona']},
+ {img:'halfdome',a:BAR(23),b:BAR(25),fx:'fade',s0:1.1,s1:1.02,pos:'center 40%',lab:['11','Yosemite','California'],cue:1},
+ ...['timessq','brooklyn','centralpark','boston','miami','hollywood','santamonica','acadia'].map((im,i)=>({img:im,a:BAR(25)+i*BEAT/2,b:BAR(25)+(i+1)*BEAT/2,fx:'cut',s0:1.06,s1:1.1,mlab:['Times Square','Brooklyn','Central Park','Boston','Miami','Hollywood','Santa Monica','Acadia'][i]})),
+];
+const shots=$('shots');
+SH.forEach(s=>{const d=document.createElement('div');d.className='shot';d.style.backgroundImage=`url(img/${s.img}.jpg)`;if(s.pos)d.style.backgroundPosition=s.pos;shots.appendChild(d);s.el=d;});
+function drawShots(t){
+ SH.forEach(s=>{
+  if(!(t>=s.a&&t<s.b+.6)){s.el.style.opacity=0;return;}
+  const k=cl((t-s.a)/(s.b-s.a)),ein=cl((t-s.a)/.7);
+  let sc=lerp(s.s0,s.s1,easeIO(k)),x=lerp(s.x0||0,s.x1||0,k),op=1,clip='none',blur=0;
+  if(s.fx==='fade'){op=easeIO(ein);}
+  else if(s.fx==='zoom'){op=easeIO(cl((t-s.a)/.5));sc+=(1-ease(ein))*.12;blur=(1-ease(cl((t-s.a)/.4)))*8;}
+  else if(s.fx==='wipeL'){const p=easeIO(cl((t-s.a)/.6));clip=`inset(0 ${(1-p)*100}% 0 0)`;x+=(1-p)*-60;}
+  else if(s.fx==='wipeR'){const p=easeIO(cl((t-s.a)/.6));clip=`inset(0 0 0 ${(1-p)*100}%)`;x+=(1-p)*60;}
+  // keep outgoing shot under the next one until it has fully covered
+  if(t>=s.b){op=s.fx==='cut'?0:op*cl(1-(t-s.b)/.6);}
+  if(s.fx==='cut'&&t>=s.b)op=0;
+  if(s.intro)op*=cl(t/1.2)*(t<BAR(2)?.85:1);
+  s.el.style.zIndex=Math.round(s.a*10);
+  s.el.style.opacity=op;s.el.style.clipPath=clip;
+  s.el.style.transform=`translateX(${x}px) scale(${sc+.006*pulse(t)})`;
+  s.el.style.filter=`blur(${blur+(s.intro&&t<BAR(2)?2.5:0)}px) saturate(1.08) contrast(1.05)`;
+ });
+ // split screen EAST | WEST (BAR 13 → 14)
+ const sp=$('split'),a=BAR(12),b=BAR(13);
+ if(t>=a-.1&&t<b+.7){const k=(t-a)/(b-a);sp.style.opacity=cl((t-a)/.4)*(t<b?1:cl(1-(t-b)/.6));
+  const open=easeIO(cl((t-a)/.8));sp.querySelector('.L').style.clipPath=`inset(0 ${(1-open)*100}% 0 0)`;sp.querySelector('.R').style.clipPath=`inset(0 0 0 ${(1-open)*100}%)`;
+  sp.querySelector('.L').style.transform=`scale(${1.1-.05*k})`;sp.querySelector('.R').style.transform=`scale(${1.1-.05*k})`;
+  const tk=easeIO(cl((t-a-.4)/.8));sp.querySelector('.tl').style.opacity=tk*cl((b-.15-t)/.3);sp.querySelector('.tr').style.opacity=tk*cl((b-.15-t)/.3);
+  sp.querySelector('.tl').style.letterSpacing=(.35-.2*tk)+'em';sp.querySelector('.tr').style.letterSpacing=(.35-.2*tk)+'em';
+  sp.querySelector('.div').style.transform=`translateX(-50%) scaleY(${open})`;
+ }else sp.style.opacity=0;
+}
+
+// ---------- LOWER-THIRD LABEL + CHAPTER ----------
+let cur=null;
+function drawLabel(t){
+ const s=SH.find(s=>s.lab&&t>=s.a&&t<s.b);const el=$('lab');
+ if(!s){el.style.opacity=cl(1-(t-(cur?cur.b:0))/.25)*(cur&&t<cur.b+.25?1:0);if(!cur||t>cur.b+.25)el.style.opacity=0;return;}
+ if(cur!==s){cur=s;el.querySelector('.idx').textContent=s.lab[0];el.querySelector('.n').textContent=s.lab[1];el.querySelector('.s').textContent=s.lab[2];}
+ const k=t-s.a-(s.cue?BAR(1)-B0+.2:.1),out=cl((s.b-t)/.25);
+ el.style.opacity=out*cl(k/.2);
+ const n=el.querySelector('.n');n.style.opacity=cl((k-.15)/.4);n.style.transform=`translateY(${(1-ease((k-.15)/.6))*30}px)`;n.style.filter=`blur(${(1-ease((k-.15)/.45))*8}px)`;
+ el.querySelector('.idx').style.opacity=cl(k/.4)*.9;el.querySelector('.idx').style.transform=`translateY(${(1-ease(k/.6))*20}px)`;
+ el.querySelector('.rule').style.width=(ease(k/.8)*240)+'px';
+ const sv=el.querySelector('.s');sv.style.opacity=cl((k-.35)/.4)*.85;sv.style.letterSpacing=(.9-.35*ease((k-.35)/1))+'em';
+ // chapter marker
+ const c=$('chap');const ch=SH.filter(x=>x.chap&&t>=x.a).pop();
+ if(ch&&t<BAR(25)&&!(t>=BAR(12)&&t<BAR(13))){if(c.dataset.c!==ch.chap[0]){c.dataset.c=ch.chap[0];c.querySelector('.k').textContent='CHAPTER '+ch.chap[0];c.querySelector('.v').textContent=ch.chap[1];}c.style.opacity=cl((t-ch.a-.3)/.6)*.95;}else c.style.opacity=0;
+}
+
+function drawM(t){const s=SH.find(s=>s.mlab&&t>=s.a&&t<s.b);const el=$('mlab');if(!s){el.style.opacity=0;return;}el.textContent=s.mlab;el.style.opacity=1;el.style.letterSpacing=(.5-.3*cl((t-s.a)/(s.b-s.a)))+'em';}
+// ---------- ROUTE (east → west progress) ----------
+function drawRoute(t){
+ const v=cl((t-BAR(2))/.8)*cl((BAR(25)-t)/.5)*(t>=BAR(12)&&t<BAR(13)?0:1);$('route').style.opacity=v*.95;
+ const k=easeIO(cl((t-BAR(2))/(BAR(25)-BAR(2))));const W=1620;
+ $('route').querySelector('.pr').style.width=(k*W)+'px';$('route').querySelector('.dot').style.right=(k*W)+'px';
+}
+
+// ---------- KINETIC TYPE (serif, mask-rise) ----------
+const cues=[
+ {a:.6,b:2.25,y:420,size:96,cls:'serif it',words:['From','sea'],mode:'rise'},
+ {a:2.45,b:BAR(2)-.05,y:420,size:96,cls:'serif it',words:['to','shining','sea.'],mode:'rise'},
+ {a:BAR(2)+.35,b:BAR(3)+.2,y:400,size:88,cls:'serif it',words:['The','city','that','never','sleeps.'],mode:'rise'},
+ {a:BAR(8)+.35,b:BAR(9)+.2,y:400,size:88,cls:'serif it',words:['Where','nature','speaks','louder.'],mode:'rise'},
+ {a:BAR(13)+.35,b:BAR(14)+.2,y:380,size:150,cls:'serif',words:['Go','West.'],mode:'track'},
+ {a:BAR(19)+.35,b:BAR(20)+.2,y:400,size:88,cls:'serif it',words:['Some','views','change','you.'],mode:'rise'},
+ {a:BAR(23)+.35,b:BAR(24)+.2,y:390,size:88,cls:'caps',words:['Wild','·','Free','·','Endless'],mode:'track2'},
+];
+const SUBS=[[.9,BAR(2)-.1,'바다에서 빛나는 바다까지'],[BAR(2)+.7,BAR(3)+.2,'잠들지 않는 도시'],[BAR(8)+.7,BAR(9)+.2,'자연이 더 크게 말하는 곳'],[BAR(13)+.8,BAR(14)+.2,'서쪽으로'],[BAR(19)+.7,BAR(20)+.2,'어떤 풍경은 당신을 바꾼다'],[BAR(23)+.7,BAR(24)+.2,'끝없이, 자유롭게']];
+const T=$('t');
+cues.forEach(c=>{const d=document.createElement('div');d.className='txt '+c.cls;d.style.top=c.y+'px';d.style.fontSize=c.size+'px';d.style.textShadow='0 4px 30px rgba(0,0,0,.8), 0 1px 3px rgba(0,0,0,.6)';
+ c.ws=c.words.map(w=>{const m=document.createElement('span');m.style.cssText='display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .12em';const s=document.createElement('span');s.className='w';s.textContent=w;m.appendChild(s);d.appendChild(m);return s});T.appendChild(d);c.el=d;});
+const endEl=document.createElement('div');endEl.className='txt';endEl.style.top='300px';endEl.style.opacity=0;
+endEl.innerHTML=`<div id="eA" class="caps" style="font-size:20px;letter-spacing:.8em;opacity:.8">THE UNITED STATES OF</div>
+<div id="eB" class="serif" style="font-size:210px;line-height:1.05;letter-spacing:.18em;margin-left:.18em">AMERICA</div>
+<div id="eR" style="height:1.5px;background:#fff;width:0;margin:18px auto 26px"></div>
+<div id="eC" class="serif it" style="font-size:46px">Every road, a new story.</div>
+<div id="eD" style="font:300 30px 'Noto Serif KR',serif;letter-spacing:.2em;margin-top:22px;opacity:.9">끝없는 길 위에서, 당신의 이야기를 만나세요</div>
+<div id="eE" style="display:flex;justify-content:center;gap:90px;margin-top:46px;opacity:0">
+ <div style="text-align:left"><div class="caps" style="font-size:16px;opacity:.75">East · 7 Days</div><div style="font:400 30px 'Noto Serif KR',serif;margin-top:10px">뉴욕 → 워싱턴 D.C. → 나이아가라</div><div style="font:300 19px Inter;opacity:.7;margin-top:8px;letter-spacing:.1em">ICN → JFK 직항 약 14시간</div></div>
+ <div style="width:1px;background:rgba(255,255,255,.4)"></div>
+ <div style="text-align:left"><div class="caps" style="font-size:16px;opacity:.75">West · 10 Days</div><div style="font:400 30px 'Noto Serif KR',serif;margin-top:10px">샌프란시스코 → 빅서 → 라스베이거스 → 그랜드캐니언</div><div style="font:300 19px Inter;opacity:.7;margin-top:8px;letter-spacing:.1em">ICN → SFO 직항 약 11시간</div></div></div>`;
+T.appendChild(endEl);
+function drawCues(t){
+ cues.forEach(c=>{const out=cl((c.b-t)/.4);
+  c.ws.forEach((s,i)=>{const st=c.a+i*(c.mode==='track2'?.16:.11);const p=(t-st)/.7;let tr='',f='';
+   if(c.mode==='rise'){tr=`translateY(${(1-ease(p))*110}%)`;}
+   else if(c.mode==='track'){tr=`translateY(${(1-ease(p))*100}%)`;c.el.style.letterSpacing=(.3-ease((t-c.a)/1.6)*.24)+'em';}
+   else if(c.mode==='track2'){tr=`translateY(${(1-ease(p))*100}%)`;c.el.style.letterSpacing=(.45-ease((t-c.a)/1.8)*.25)+'em';}
+   s.style.opacity=cl(p*1.5)*out;s.style.transform=tr+` translateY(${(1-out)*-20}px)`;s.style.filter=out<1?`blur(${(1-out)*8}px)`:'none';});
+ });
+ const sub=SUBS.find(s=>t>=s[0]&&t<s[1]);const se=$('sub');
+ if(sub){if(se.textContent!==sub[2])se.textContent=sub[2];se.style.opacity=cl((t-sub[0]-.4)/.5)*cl((sub[1]-t)/.4)*.95;se.style.top=(cues.find(c=>t>=c.a&&t<c.b)?.size>120?600:560)+'px';}else se.style.opacity=0;
+ $('scrimC').style.opacity=Math.max(0,...cues.map(c=>cl((t-c.a)/.5)*cl((c.b-t)/.4)));
+ // end card
+ const a=t-HIT;endEl.style.opacity=cl(a/.3);
+ $('eA').style.opacity=cl((a-.2)/.6)*.8;$('eA').style.letterSpacing=(1.2-.4*ease(a/2))+'em';
+ $('eB').style.letterSpacing=(.5-.32*ease(a/2.2))+'em';$('eB').style.filter=`blur(${(1-ease(a/.9))*14}px)`;$('eB').style.opacity=cl(a/.5);
+ $('eR').style.width=(ease((a-.6)/1.2)*420)+'px';
+ $('eC').style.opacity=cl((a-1.0)/.7);$('eC').style.transform=`translateY(${(1-ease((a-1)/.9))*24}px)`;
+ $('eD').style.opacity=cl((a-1.6)/.7)*.9;$('eE').style.opacity=cl((a-3.0)/.8);$('eE').style.transform=`translateY(${(1-ease((a-3)/1))*20}px)`;endEl.style.top=(300-70*easeIO((a-2.6)/1.2))+'px';
+}
+
+// ---------- FX: light leaks, intro particles ----------
+const fx=$('fx'),g=fx.getContext('2d');
+const R=i=>{const x=Math.sin(i*127.1)*43758.5453;return x-Math.floor(x)};
+function drawFX(t){
+ g.clearRect(0,0,1920,1080);
+ // soft golden leak drifting on nature / sunset shots
+ const L=[[BAR(8),BAR(12)],[BAR(13),BAR(15)],[BAR(19),BAR(25)]];
+ let lk=0;L.forEach(([a,b])=>lk=Math.max(lk,cl((t-a)/.8)*cl((b-t)/.6)));
+ if(lk>0){g.save();g.globalCompositeOperation='lighter';const x=((t*180)%2600)-340;const gr=g.createRadialGradient(x,160,0,x,160,950);gr.addColorStop(0,`rgba(255,180,110,${.22*lk})`);gr.addColorStop(1,'rgba(255,120,40,0)');g.fillStyle=gr;g.fillRect(0,0,1920,1080);g.restore();}
+ // dust motes in intro + end
+ const dm=Math.max(cl(t/.8)*cl((BAR(2)-t)/.5),cl((t-HIT)/1));
+ if(dm>0){g.save();g.globalCompositeOperation='lighter';for(let i=0;i<110;i++){const x=R(i)*1920+Math.sin(t*.4+i)*20,y=((R(i+9)*1080-t*(12+R(i+3)*22))%1080+1080)%1080;g.fillStyle=`rgba(255,235,210,${dm*.45*(.4+.6*Math.abs(Math.sin(t*1.3+i)))})`;g.beginPath();g.arc(x,y,.8+R(i+5)*2,0,7);g.fill();}g.restore();}
+}
+function drawFlash(t){let v=0;[[BAR(2),.35],[BAR(13),.5],[BAR(25),.3],[HIT,.6]].forEach(([c,a])=>{const d=t-c;if(d>=0&&d<.5)v=Math.max(v,a*(1-d/.5))});$('flash').style.opacity=v;
+ stage.style.setProperty('--bar',(135+30*cl((t-HIT)/1.2))+'px');}
+
+// ---------- AUDIO: recorded score + a few soft transitions ----------
+// Kevin MacLeod – "Inspired" (incompetech.com, CC BY 4.0). Track 272.50s (final downbeat) lands on HIT (52.0s).
+let AC,COMP,MUS=null;const MUS_OFF=272.50-HIT;
+const musReady=fetch('audio/Inspired.mp3').then(r=>r.arrayBuffer()).then(b=>new OfflineAudioContext(2,44100,44100).decodeAudioData(b)).then(a=>{MUS=a}).catch(e=>console.warn('music',e));
+function audioInit(){AC=new (window.AudioContext||window.webkitAudioContext)();COMP=AC.createDynamicsCompressor();COMP.threshold.value=-14;COMP.ratio.value=3;COMP.connect(AC.destination);}
+function noise(t0,dur,vol,f1,f2,type='bandpass'){const b=AC.createBuffer(1,Math.ceil(AC.sampleRate*dur),AC.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const s=AC.createBufferSource();s.buffer=b;const f=AC.createBiquadFilter();f.type=type;f.Q.value=1.2;f.frequency.setValueAtTime(f1,t0);f.frequency.exponentialRampToValueAtTime(f2,t0+dur);const gn=AC.createGain();gn.gain.setValueAtTime(0,t0);gn.gain.linearRampToValueAtTime(vol,t0+dur*.7);gn.gain.linearRampToValueAtTime(0,t0+dur);s.connect(f);f.connect(gn);gn.connect(COMP);s.start(t0);}
+function boom(t0,v=.6){const o=AC.createOscillator(),gn=AC.createGain();o.frequency.setValueAtTime(65,t0);o.frequency.exponentialRampToValueAtTime(30,t0+1.2);gn.gain.setValueAtTime(v,t0);gn.gain.exponentialRampToValueAtTime(.001,t0+1.6);o.connect(gn);gn.connect(COMP);o.start(t0);o.stop(t0+1.7);}
+function score(T0){
+ if(MUS){const src=AC.createBufferSource();src.buffer=MUS;const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=20000;const gn=AC.createGain();src.connect(lp);lp.connect(gn);gn.connect(COMP);gn.gain.setValueAtTime(0,T0);gn.gain.linearRampToValueAtTime(1,T0+1.6);
+  const a=T0+BAR(12),b=T0+BAR(13);lp.frequency.setValueAtTime(20000,a-.05);lp.frequency.exponentialRampToValueAtTime(700,a+.5);gn.gain.setValueAtTime(1,a-.05);gn.gain.linearRampToValueAtTime(.55,a+.5);lp.frequency.setValueAtTime(700,b-1);lp.frequency.exponentialRampToValueAtTime(20000,b);gn.gain.setValueAtTime(.55,b-1);gn.gain.linearRampToValueAtTime(1.1,b);
+  src.start(T0,MUS_OFF);}
+ noise(T0+BAR(13)-1.6,1.6,.16,250,6000);noise(T0+BAR(25)-1.2,1.2,.14,300,7000);
+ [2,4,6,8,10,15,17,19,21,23].forEach(n=>{boom(T0+BAR(n),.18);noise(T0+BAR(n)-.35,.35,.06,600,3000);});
+ noise(T0+BAR(12)-.5,.5,.12,300,3500);boom(T0+BAR(2),.35);boom(T0+BAR(13),.5);boom(T0+HIT,.6);
+}
+
+const gc=document.getElementById('grain').getContext('2d'),gid=gc.createImageData(480,270);function drawGrain(){for(let i=0;i<gid.data.length;i+=4){const v=Math.random()*255;gid.data[i]=gid.data[i+1]=gid.data[i+2]=v;gid.data[i+3]=255;}gc.putImageData(gid,0,0);}drawGrain();
+// ---------- RUN ----------
+let t0=null,raf;
+function render(t){drawShots(t);drawLabel(t);drawM(t);drawRoute(t);drawCues(t);drawFX(t);drawFlash(t);}
+function frame(now){const t=(now-t0)/1000;render(t);if(!(now%3<1))drawGrain();if(t<TOTAL)raf=requestAnimationFrame(frame);}
+async function play(){$('start').querySelector('span').textContent='LOADING…';await musReady;$('start').style.display='none';if(AC)AC.close();audioInit();cancelAnimationFrame(raf);t0=performance.now()+60;score(AC.currentTime+.06);raf=requestAnimationFrame(frame);}
+$('start').onclick=play;addEventListener('keydown',e=>{if(e.key==='r'||e.key==='R')play();});
+const q=new URLSearchParams(location.search).get('t');if(q!==null){$('start').style.display='none';const t=+q;render(t);setTimeout(()=>render(t),400);}
+</script>
+</body>
+</html>
