@@ -26,24 +26,25 @@ canvas{position:absolute;inset:0;pointer-events:none}
 #lab .idx{font:300 26px/1 Inter,sans-serif;color:#fff;letter-spacing:.3em;margin-bottom:14px}
 #lab .rule{height:1.5px;background:#fff;width:0;margin:0 0 18px}
 #lab .n{font:400 92px/1.02 "Playfair Display",serif;letter-spacing:.005em}
-#lab .k{font:700 34px 'Noto Sans KR',sans-serif;margin-top:14px;letter-spacing:.04em}
-#lab .s{font:300 22px Inter,sans-serif;letter-spacing:.55em;text-transform:uppercase;margin-top:16px;opacity:.85}
+#lab .k{font:700 40px 'Noto Sans KR',sans-serif;margin-top:14px;letter-spacing:.04em}
+#lab .s{font:400 26px Inter,sans-serif;letter-spacing:.45em;text-transform:uppercase;margin-top:16px;opacity:1}
 #chap{position:absolute;right:150px;top:180px;color:#fff;text-align:right;opacity:0;text-shadow:0 2px 20px rgba(0,0,0,.75)}
-#chap .k{font:300 20px Inter;letter-spacing:.6em;opacity:.85}
-#chap .v{font:italic 400 48px "Playfair Display",serif;margin-top:6px}
+#chap .k{font:400 24px Inter;letter-spacing:.55em;opacity:.95}
+#chap .v{font:italic 400 60px "Playfair Display",serif;margin-top:6px}
 /* coast-to-coast line (east on the right, travelling west) */
 #route{position:absolute;left:150px;right:150px;bottom:160px;height:20px;opacity:0}
 #route .ln{position:absolute;left:0;right:0;top:9px;height:1px;background:rgba(255,255,255,.35)}
 #route .pr{position:absolute;right:0;top:9px;height:1px;background:#fff;width:0}
 #route .dot{position:absolute;top:4px;width:11px;height:11px;border-radius:50%;background:#fff;box-shadow:0 0 14px rgba(255,255,255,.9);transform:translateX(50%)}
-#route .e,#route .wv{position:absolute;top:-22px;font:300 12px Inter;letter-spacing:.5em;color:rgba(255,255,255,.7)}
+#route .e,#route .wv{position:absolute;top:20px;font:400 16px Inter;letter-spacing:.5em;color:rgba(255,255,255,.85)}
 #route .e{right:0}#route .wv{left:0}
 #sub{position:absolute;left:0;right:0;top:640px;text-align:center;color:#fff;font:700 58px "Noto Sans KR",sans-serif;letter-spacing:.12em;text-shadow:0 2px 24px rgba(0,0,0,.85),0 1px 4px rgba(0,0,0,.6);opacity:0}
 #split{position:absolute;inset:0;opacity:0}
 #split .half{position:absolute;top:0;bottom:0;width:50%;background-size:cover;background-position:center}
 #split .L{left:0;background-image:url(img/manhattan.jpg)}#split .R{right:0;background-image:url(img/goldengate.jpg)}
 #split .div{position:absolute;left:50%;top:0;bottom:0;width:1.5px;background:#fff;transform:translateX(-50%)}
-#split .tl,#split .tr{position:absolute;top:470px;font:400 120px "Playfair Display",serif;color:#fff;letter-spacing:.2em;text-shadow:0 4px 40px rgba(0,0,0,.5)}
+#split .tl,#split .tr{position:absolute;top:470px;font:400 120px "Playfair Display",serif;color:#fff;letter-spacing:.2em;text-shadow:0 4px 40px rgba(0,0,0,.8),0 1px 4px rgba(0,0,0,.6)}
+#split .band{position:absolute;left:0;right:0;top:420px;height:260px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.5) 30%,rgba(0,0,0,.5) 70%,rgba(0,0,0,0))}
 #split .tl{right:calc(50% + 80px)}#split .tr{left:calc(50% + 80px)}
 #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
 #bars:before,#bars:after{content:"";position:absolute;left:0;right:0;height:var(--bar,135px);background:#000;z-index:50}
@@ -59,7 +60,7 @@ canvas{position:absolute;inset:0;pointer-events:none}
 <div id="ctl">R = replay</div>
 <div id="stage">
   <div id="shots"></div>
-  <div id="split"><div class="half L"></div><div class="half R"></div><div class="div"></div><div class="tl">EAST</div><div class="tr">WEST</div></div>
+  <div id="split"><div class="half L"></div><div class="half R"></div><div class="div"></div><div class="band"></div><div class="tl">EAST</div><div class="tr">WEST</div></div>
   <div id="grade"></div>
   <canvas id="fx" width="1920" height="1080"></canvas>
   <div id="scrimB"></div><div id="scrimC"></div>
@@ -85,7 +86,7 @@ const easeIO=t=>{t=cl(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2};
 const lerp=(a,b,k)=>a+(b-a)*k;
 // music grid: "Inspired" 120.27 BPM, video beats at 0.12 + n·0.4989
 const BEAT=0.4989,B0=0.12,B=n=>B0+n*BEAT,BAR=n=>B(4*n);
-const HIT=BAR(26), TOTAL=64; // 52.0s: final downbeat of the track → end card
+const HIT=BAR(26), TOTAL=67; // 52.0s: final downbeat of the track → end card
 const pulse=t=>t<BAR(2)||t>HIT?0:Math.exp(-(((t-B0)%BEAT+BEAT)%BEAT)/0.09);
 
 // ---------- SHOTS (bar-quantised) ----------
@@ -93,7 +94,7 @@ const pulse=t=>t<BAR(2)||t>HIT?0:Math.exp(-(((t-B0)%BEAT+BEAT)%BEAT)/0.09);
 const SH=[
  {img:'nyc2',a:0,b:BAR(2)+.4,fx:'fade',s0:1.16,s1:1.03,x0:60,x1:-30,intro:1},
  {img:'manhattan',a:BAR(2),b:BAR(4),fx:'zoom',s0:1.1,s1:1.02,lab:['01','New York City','New York'],chap:['I','The East'],cue:1},
- {img:'p_tsnight',a:BAR(4),b:BAR(5),fx:'wipeL',s0:1.02,s1:1.1,lab:['02','Times Square','Manhattan · New York','수많은 사람들 속, 뉴욕의 밤']},
+ {img:'p_tsnight',vid:'times',vin:1.5,a:BAR(4),b:BAR(5),fx:'wipeL',s0:1.02,s1:1.1,lab:['02','Times Square','Manhattan · New York','수많은 사람들 속, 뉴욕의 리듬']},
  {img:'p_pizza',a:BAR(5),b:BAR(6),fx:'zoom',s0:1.12,s1:1.04,lab:['03','A Slice of New York','Brooklyn · New York','뉴욕 피자 한 조각의 행복']},
  {img:'liberty',a:BAR(6),b:BAR(7),fx:'wipeL',s0:1.02,s1:1.08,pos:'center 22%',lab:['04','Statue of Liberty','Liberty Island · New York']},
  {img:'capitol',a:BAR(7),b:BAR(8),fx:'fade',s0:1.08,s1:1.02,lab:['05','Washington, D.C.','District of Columbia']},
@@ -105,17 +106,25 @@ const SH=[
  {img:'p_smtower',a:BAR(16),b:BAR(17),fx:'wipeR',s0:1.02,s1:1.08,lab:['11','Santa Monica Beach','Los Angeles · California','햇살 아래 맨발로 걷는 해변']},
  {img:'p_route66b',a:BAR(17),b:BAR(18),fx:'zoom',s0:1.12,s1:1.03,lab:['12','Route 66','Mother Road · Arizona','창문을 내리고, 끝없는 로드트립']},
  {img:'vegas',a:BAR(18),b:BAR(19),fx:'wipeR',s0:1.02,s1:1.08,lab:['13','Las Vegas','Nevada','잠들지 않는 사막의 불빛']},
- {img:'canyon',a:BAR(19),b:BAR(21),fx:'zoom',s0:1.12,s1:1.02,x0:40,x1:-40,lab:['14','Grand Canyon','Arizona'],cue:1},
+ {img:'canyon',vid:'canyon',vin:1,a:BAR(19),b:BAR(21),fx:'zoom',s0:1.12,s1:1.02,x0:40,x1:-40,lab:['14','Grand Canyon','Arizona'],cue:1},
  {img:'p_hikers',a:BAR(21),b:BAR(22),fx:'wipeR',s0:1.02,s1:1.1,lab:['15','Slot Canyons','Page · Arizona','붉은 협곡 사이를 걷다']},
  {img:'monument',a:BAR(22),b:BAR(23),fx:'fade',s0:1.08,s1:1.02,lab:['16','Monument Valley','Utah · Arizona']},
- {img:'halfdome',a:BAR(23),b:BAR(25),fx:'fade',s0:1.1,s1:1.02,pos:'center 40%',lab:['17','Yosemite','California'],cue:1},
- ...['p_tschill','p_dinernight','hollywood','p_thunderbolt','miami','p_tscrowd','centralpark','santamonica'].map((im,i)=>({img:im,a:BAR(25)+i*BEAT/2,b:BAR(25)+(i+1)*BEAT/2,fx:'cut',s0:1.06,s1:1.1,mlab:['Times Square','Diner Nights','Hollywood','Coney Island','Miami','New York','Central Park','Santa Monica'][i]})),
+ {img:'halfdome',vid:'halfdome',vin:.5,a:BAR(23),b:BAR(25),fx:'fade',s0:1.1,s1:1.02,pos:'center 40%',lab:['17','Yosemite','California'],cue:1},
+ ...['p_tsnight','p_dinernight','hollywood','p_thunderbolt','miami','p_tscrowd','centralpark','santamonica'].map((im,i)=>({img:im,a:BAR(25)+i*BEAT/2,b:BAR(25)+(i+1)*BEAT/2,fx:'cut',s0:1.06,s1:1.1,mlab:['Times Square','Diner Nights','Hollywood','Coney Island','Miami','New York','Central Park','Santa Monica'][i]})),
 ];
 const shots=$('shots');
-SH.forEach(s=>{const d=document.createElement('div');d.className='shot';d.style.backgroundImage=`url(img/${s.img}.jpg)`;if(s.pos)d.style.backgroundPosition=s.pos;shots.appendChild(d);s.el=d;});
+SH.forEach(s=>{const d=document.createElement('div');d.className='shot';d.style.backgroundImage=`url(img/${s.img}.jpg)`;if(s.pos)d.style.backgroundPosition=s.pos;
+ if(s.vid){const v=document.createElement('video');v.src=`vid/${s.vid}.webm`;v.muted=true;v.playsInline=true;v.loop=true;v.preload='auto';v.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover';d.appendChild(v);s.v=v;}
+ shots.appendChild(d);s.el=d;});
+let PLAYING=false;
+function syncVideo(s,t,active){const v=s.v;if(!v)return;if(!active){if(!v.paused)v.pause();return;}
+ const want=s.vin+Math.max(0,t-s.a);
+ if(PLAYING){if(v.paused){try{v.currentTime=want}catch(e){}v.play().catch(()=>{});}else if(Math.abs(v.currentTime-want)>.35&&want<v.duration-.1){v.currentTime=want;}}
+ else{if(Math.abs(v.currentTime-want)>.04)try{v.currentTime=want}catch(e){}}}
 function drawShots(t){
  SH.forEach(s=>{
-  if(!(t>=s.a&&t<s.b+.6)){s.el.style.opacity=0;return;}
+  if(!(t>=s.a&&t<s.b+.6)){s.el.style.opacity=0;syncVideo(s,t,false);return;}
+  syncVideo(s,t,true);
   const k=cl((t-s.a)/(s.b-s.a)),ein=cl((t-s.a)/.7);
   let sc=lerp(s.s0,s.s1,easeIO(k)),x=lerp(s.x0||0,s.x1||0,k),op=1,clip='none',blur=0;
   if(s.fx==='fade'){op=easeIO(ein);}
@@ -157,7 +166,7 @@ function drawLabel(t){
  const sv=el.querySelector('.s');sv.style.opacity=cl((k-.35)/.4)*.85;sv.style.letterSpacing=(.9-.35*ease((k-.35)/1))+'em';
  // chapter marker
  const c=$('chap');const ch=SH.filter(x=>x.chap&&t>=x.a).pop();
- if(ch&&t<BAR(25)&&!(t>=BAR(12)&&t<BAR(13))){if(c.dataset.c!==ch.chap[0]){c.dataset.c=ch.chap[0];c.querySelector('.k').textContent='CHAPTER '+ch.chap[0];c.querySelector('.v').textContent=ch.chap[1];}c.style.opacity=cl((t-ch.a-.3)/.6)*.95;}else c.style.opacity=0;
+ if(ch&&t<BAR(25)&&!(t>=BAR(12)&&t<BAR(13))){if(c.dataset.c!==ch.chap[0]){c.dataset.c=ch.chap[0];c.querySelector('.k').textContent='CHAPTER '+ch.chap[0];c.querySelector('.v').textContent=ch.chap[1];}c.style.opacity=cl((t-ch.a-.3)/.6)*cl((ch.a+5.5-t)/.6)*.95;}else c.style.opacity=0;
 }
 
 function drawM(t){const s=SH.find(s=>s.mlab&&t>=s.a&&t<s.b);const el=$('mlab');if(!s){el.style.opacity=0;return;}el.textContent=s.mlab;el.style.opacity=1;el.style.letterSpacing=(.5-.3*cl((t-s.a)/(s.b-s.a)))+'em';}
@@ -188,12 +197,13 @@ endEl.innerHTML=`<div id="eA" class="caps" style="font-size:20px;letter-spacing:
 <div id="eR" style="height:1.5px;background:#fff;width:0;margin:18px auto 26px"></div>
 <div id="eC" class="serif it" style="font-size:46px">Every road, a new story.</div>
 <div id="eD" style="font:500 34px 'Noto Sans KR',sans-serif;letter-spacing:.12em;margin-top:22px;opacity:.9">끝없는 길 위에서, 당신의 이야기를 만나세요</div>
-<div id="eE" style="display:flex;justify-content:center;gap:90px;margin-top:46px;opacity:0">
- <div style="text-align:left"><div class="caps" style="font-size:20px;opacity:.8">East · 7 Days</div><div style="font:700 36px 'Noto Sans KR',sans-serif;margin-top:12px">뉴욕 → 워싱턴 D.C. → 나이아가라</div><div style="font:500 24px 'Noto Sans KR',sans-serif;opacity:.75;margin-top:10px">인천 → 뉴욕 직항 약 14시간 · 추천 9–10월</div></div>
- <div style="width:1px;background:rgba(255,255,255,.4)"></div>
- <div style="text-align:left"><div class="caps" style="font-size:20px;opacity:.8">West · 10 Days</div><div style="font:700 36px 'Noto Sans KR',sans-serif;margin-top:12px">샌프란시스코 → 빅서 → 라스베이거스 → 그랜드캐니언</div><div style="font:500 24px 'Noto Sans KR',sans-serif;opacity:.75;margin-top:10px">인천 → 샌프란시스코 직항 약 11시간 · 추천 4–6월</div></div></div>
-<div id="eF" style="font:500 24px 'Noto Sans KR',sans-serif;margin-top:34px;opacity:0;letter-spacing:.06em">입국 전 ESTA(전자여행허가) 온라인 신청 필수 · 지금, 당신의 미국 여행을 계획하세요</div>`;
+<div id="eE" style="display:flex;flex-direction:column;align-items:center;gap:22px;margin-top:0;opacity:0">
+ <div style="text-align:center"><div class="caps" style="font-size:24px;opacity:.9">East · 7 Days</div><div style="font:700 46px 'Noto Sans KR',sans-serif;margin-top:12px">뉴욕 → 워싱턴 D.C. → 나이아가라</div><div style="font:500 30px 'Noto Sans KR',sans-serif;opacity:.85;margin-top:12px">인천 → 뉴욕 직항 약 14시간 · 추천 9–10월</div></div>
+ <div style="width:420px;height:1px;background:rgba(255,255,255,.35)"></div>
+ <div style="text-align:center"><div class="caps" style="font-size:24px;opacity:.9">West · 10 Days</div><div style="font:700 46px 'Noto Sans KR',sans-serif;margin-top:12px">샌프란시스코 → 빅서 → 라스베이거스 → 그랜드캐니언</div><div style="font:500 30px 'Noto Sans KR',sans-serif;opacity:.85;margin-top:12px">인천 → 샌프란시스코 직항 약 11시간 · 추천 4–6월</div></div></div>
+<div id="eF" style="font:500 30px 'Noto Sans KR',sans-serif;margin-top:34px;opacity:0;letter-spacing:.06em">입국 전 ESTA(전자여행허가) 온라인 신청 필수 · 지금, 당신의 미국 여행을 계획하세요</div>`;
 T.appendChild(endEl);
+const itin=document.createElement('div');itin.className='txt';itin.style.top='375px';itin.style.opacity=0;T.appendChild(itin);itin.appendChild(document.getElementById('eE'));itin.appendChild(document.getElementById('eF'));
 function drawCues(t){
  cues.forEach(c=>{const out=cl((c.b-t)/.4);
   c.ws.forEach((s,i)=>{const st=c.a+i*(c.mode==='track2'?.16:.11);const p=(t-st)/.7;let tr='',f='';
@@ -211,7 +221,9 @@ function drawCues(t){
  $('eB').style.letterSpacing=(.5-.32*ease(a/2.2))+'em';$('eB').style.filter=`blur(${(1-ease(a/.9))*14}px)`;$('eB').style.opacity=cl(a/.5);
  $('eR').style.width=(ease((a-.6)/1.2)*420)+'px';
  $('eC').style.opacity=cl((a-1.0)/.7);$('eC').style.transform=`translateY(${(1-ease((a-1)/.9))*24}px)`;
- $('eD').style.opacity=cl((a-1.6)/.7)*.9;$('eE').style.opacity=cl((a-2.6)/.8);$('eF').style.opacity=cl((a-4.2)/.8)*.85;$('eE').style.transform=`translateY(${(1-ease((a-3)/1))*20}px)`;endEl.style.top=(300-90*easeIO((a-2.2)/1.2))+'px';
+ const p2=easeIO((a-4.4)/1.1);$('eD').style.opacity=cl((a-1.6)/.7)*.9*(1-p2);$('eC').style.opacity=cl((a-1.0)/.7)*(1-p2);$('eA').style.opacity=cl((a-.2)/.6)*.8*(1-p2);
+ endEl.style.transform=`translateY(${-195*p2}px) scale(${1-.42*p2})`;
+ itin.style.opacity=cl((a-5.0)/.8);itin.style.transform=`translateY(${(1-ease((a-5)/1))*30}px)`;$('eE').style.opacity=1;$('eF').style.opacity=cl((a-6.2)/.8)*.9;
 }
 
 // ---------- FX: light leaks, intro particles ----------
@@ -251,7 +263,7 @@ const gc=document.getElementById('grain').getContext('2d'),gid=gc.createImageDat
 let t0=null,raf;
 function render(t){drawShots(t);drawLabel(t);drawM(t);drawRoute(t);drawCues(t);drawFX(t);drawFlash(t);}
 function frame(now){const t=(now-t0)/1000;render(t);if(!(now%3<1))drawGrain();if(t<TOTAL)raf=requestAnimationFrame(frame);}
-async function play(){$('start').querySelector('span').textContent='LOADING…';await musReady;$('start').style.display='none';if(AC)AC.close();audioInit();cancelAnimationFrame(raf);t0=performance.now()+60;score(AC.currentTime+.06);raf=requestAnimationFrame(frame);}
+async function play(){PLAYING=true;$('start').querySelector('span').textContent='LOADING…';await musReady;$('start').style.display='none';if(AC)AC.close();audioInit();cancelAnimationFrame(raf);t0=performance.now()+60;score(AC.currentTime+.06);raf=requestAnimationFrame(frame);}
 $('start').onclick=play;addEventListener('keydown',e=>{if(e.key==='r'||e.key==='R')play();});
 const q=new URLSearchParams(location.search).get('t');if(q!==null){$('start').style.display='none';const t=+q;render(t);setTimeout(()=>render(t),400);}
 </script>
